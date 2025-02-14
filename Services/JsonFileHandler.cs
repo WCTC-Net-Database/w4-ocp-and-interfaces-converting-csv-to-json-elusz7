@@ -9,22 +9,12 @@ public class JsonFileHandler : IFileHandler
     public List<Character> ReadCharacters(string filePath)
     {
         string jsonString = File.ReadAllText(filePath);
-        List<Character> characters = JsonConvert.DeserializeObject<List<Character>>(jsonString) ?? new List<Character>();
-
-        foreach (var character in characters)
-        {
-            if (character.Name.Contains(","))
-            {
-                string[] names = character.Name.Split(", ");
-                character.Name = $"{names[1]} {names[0]}";
-            }
-        }
-
-        return characters;
+        return JsonConvert.DeserializeObject<List<Character>>(jsonString) ?? new List<Character>();
     }
 
     public void WriteCharacters(string filePath, List<Character> characters)
     {
-        File.WriteAllText(filePath, JsonConvert.SerializeObject(characters, Formatting.Indented));
+        var text = JsonConvert.SerializeObject(characters, Formatting.Indented);
+        File.WriteAllText(filePath, text);
     }
 }
