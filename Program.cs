@@ -8,17 +8,17 @@ class Program
 {
     static IFileHandler fileHandler;
     static List<Character> characters;
-    string filePath;
+    static string filePath;
 
     static void Main()
     {
-        filePath = "input.csv"; // Default to CSV file
+        filePath = "Files/input.csv"; // Default to CSV file
         fileHandler = new CsvFileHandler(); // Default to CSV handler
         characters = fileHandler.ReadCharacters(filePath);
 
         while (true)
         {
-            Console.WriteLine("Menu:"
+            Console.Write("Menu:"
                 + "\n1. Display Characters"
                 + "\n2. Find Character"
                 + "\n3. Add Character"
@@ -27,23 +27,29 @@ class Program
                 + "\n6. Exit"
                 + "\n\tEnter your choice: ");
             string choice = Console.ReadLine();
+            Console.WriteLine();
 
             switch (choice)
             {
                 case "1":
                     DisplayAllCharacters();
+                    Console.WriteLine();
                     break;
-                case "2"
+                case "2":
                     FindCharacter();
+                    Console.WriteLine();
                     break;
                 case "3":
                     AddCharacter();
+                    Console.WriteLine();
                     break;
                 case "4":
                     LevelUpCharacter();
+                    Console.WriteLine();
                     break;
                 case "5":
                     ChangeFileFormat();
+                    Console.WriteLine();
                     break;
                 case "6":
                     fileHandler.WriteCharacters(filePath, characters);
@@ -63,7 +69,7 @@ class Program
         }
     }
 
-    public void FindCharacter()
+    static void FindCharacter()
     {
         Console.Write("Search for: ");
         var name = Console.ReadLine();
@@ -135,13 +141,13 @@ class Program
         if (fileHandler is CsvFileHandler)
         {
             fileHandler = new JsonFileHandler();
-            filePath = "input.json";
+            filePath = "Files/input.json";
             Console.WriteLine("File format changed to JSON.");
         }
         else
         {
             fileHandler = new CsvFileHandler();
-            filePath = "input.csv";
+            filePath = "Files/input.csv";
             Console.WriteLine("File format changed to CSV.");
         }
     }
