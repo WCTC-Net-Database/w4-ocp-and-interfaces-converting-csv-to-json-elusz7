@@ -8,21 +8,24 @@ class Program
 {
     static IFileHandler fileHandler;
     static List<Character> characters;
+    string filePath;
 
     static void Main()
     {
-        string filePath = "input.csv"; // Default to CSV file
+        filePath = "input.csv"; // Default to CSV file
         fileHandler = new CsvFileHandler(); // Default to CSV handler
         characters = fileHandler.ReadCharacters(filePath);
 
         while (true)
         {
-            Console.WriteLine("Menu:");
-            Console.WriteLine("1. Display Characters");
-            Console.WriteLine("2. Add Character");
-            Console.WriteLine("3. Level Up Character");
-            Console.WriteLine("4. Exit");
-            Console.Write("Enter your choice: ");
+            Console.WriteLine("Menu:"
+                + "\n1. Display Characters"
+                + "\n2. Find Character"
+                + "\n3. Add Character"
+                + "\n4. Level Up Character"
+                + "\n5. Change File Format"
+                + "\n6. Exit"
+                + "\n\tEnter your choice: ");
             string choice = Console.ReadLine();
 
             switch (choice)
@@ -30,13 +33,19 @@ class Program
                 case "1":
                     DisplayAllCharacters();
                     break;
-                case "2":
-                    AddCharacter();
+                case "2"
+                    FindCharacter();
                     break;
                 case "3":
-                    LevelUpCharacter();
+                    AddCharacter();
                     break;
                 case "4":
+                    LevelUpCharacter();
+                    break;
+                case "5":
+                    ChangeFileFormat();
+                    break;
+                case "6":
                     fileHandler.WriteCharacters(filePath, characters);
                     return;
                 default:
@@ -50,15 +59,57 @@ class Program
     {
         foreach (var character in characters)
         {
-            Console.WriteLine($"Name: {character.Name}, Class: {character.Class}, Level: {character.Level}, HP: {character.HP}, Equipment: {string.Join(", ", character.Equipment)}");
+            Console.WriteLine(character);
+        }
+    }
+
+    public void FindCharacter()
+    {
+        Console.Write("Search for: ");
+        var name = Console.ReadLine();
+
+        var matchingCharacters = characters.Where(c => c.Name.Contains(name)).ToList();
+
+        if (matchingCharacters.Any())
+        {
+            foreach (var character in matchingCharacters)
+            {
+                Console.WriteLine(character);
+            }
+        }
+        else
+        {
+            Console.WriteLine($"No character(s) found that matches {name}.");
         }
     }
 
     static void AddCharacter()
     {
-        // TODO: Implement logic to add a new character
-        // Prompt for character details (name, class, level, hit points, equipment)
-        // Add the new character to the characters list
+        Console.Write("Enter your character's name: ");
+        var name = Console.ReadLine();
+
+        Console.Write("Enter your character's class: ");
+        var cclass = Console.ReadLine();
+
+        Console.Write("Enter your character's level: ");
+        var level = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter your character's HP: ");
+        var health = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter your character's equipment (separate items with a '|'): ");
+        var equipment = Console.ReadLine();
+
+        characters.Add(new Character
+        {
+            Name = name,
+            Class = cclass,
+            Level = level,
+            HP = health,
+            Equipment = equipment.Split('|').ToList()
+        });
+
+        Console.WriteLine("New character added successfully!");
     }
 
     static void LevelUpCharacter()
@@ -70,12 +121,28 @@ class Program
         if (character != null)
         {
             // TODO: Implement logic to level up the character
-            // character.Level++;
-            // Console.WriteLine($"Character {character.Name} leveled up to level {character.Level}!");
+            character.Level++;
+            Console.WriteLine($"Character {character.Name} leveled up to level {character.Level}!");
         }
         else
         {
             Console.WriteLine("Character not found.");
+        }
+    }
+
+    static void ChangeFileFormat()
+    {
+        if (fileHandler is CsvFileHandler)
+        {
+            fileHandler = new JsonFileHandler();
+            filePath = "input.json";
+            Console.WriteLine("File format changed to JSON.");
+        }
+        else
+        {
+            fileHandler = new CsvFileHandler();
+            filePath = "input.csv";
+            Console.WriteLine("File format changed to CSV.");
         }
     }
 }
