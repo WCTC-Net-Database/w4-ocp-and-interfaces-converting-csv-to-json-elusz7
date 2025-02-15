@@ -55,7 +55,16 @@ public class CsvFileHandler : IFileHandler
             string equipment = string.Join("|", character.Equipment);
             lines.Add($"{name},{character.Class},{character.Level},{character.HP},{equipment}");
         }
-        File.WriteAllLines(filePath, lines);
+
+        using (StreamWriter file = new StreamWriter(filePath))
+        {
+            foreach (string line in lines)
+            {
+                file.WriteLine(line);
+            }
+        }
+
+        //File.WriteAllLines(filePath, lines);
     }
 
     private string GetName(string name)

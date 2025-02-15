@@ -8,7 +8,7 @@ public class JsonFileHandler : IFileHandler
 {
     public List<Character> ReadCharacters(string filePath)
     {
-        string jsonString = File.ReadAllText(filePath);
+        var jsonString = File.ReadAllText(filePath);
         return JsonConvert.DeserializeObject<List<Character>>(jsonString) ?? new List<Character>();
     }
 
